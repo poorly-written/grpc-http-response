@@ -18,6 +18,10 @@ func SetHttpHeaderKey(key string) {
 	})
 }
 
+func GetHttpHeaderKey() string {
+	return httpHeaderKey
+}
+
 func SetHeaders(ctx context.Context, headers metadata.MD) error {
 	return grpc.SetHeader(ctx, headers)
 }
