@@ -6,6 +6,11 @@ import (
 	grpcCodes "google.golang.org/grpc/codes"
 )
 
+type Matcher interface {
+	Kind() string
+	Matches(actual any) bool
+}
+
 type Code interface {
 	IsError() bool
 	HttpCode() int
@@ -27,6 +32,23 @@ func (c code) HttpCode() int {
 
 func (c code) GrpcCode() grpcCodes.Code {
 	return c.grpc
+}
+
+func (c code) Kind() string {
+	return "code"
+}
+
+func (c code) Matches(actual any) bool {
+	if actual == nil {
+		return false
+	}
+
+	v, ok := actual.(code)
+	if !ok {
+		return false
+	}
+
+	return c.http == v.http && c.grpc == v.grpc
 }
 
 var Ok = code{http: 200, grpc: grpcCodes.OK}
